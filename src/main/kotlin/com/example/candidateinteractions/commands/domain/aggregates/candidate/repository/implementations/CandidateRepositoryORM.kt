@@ -9,11 +9,15 @@ import org.springframework.stereotype.Repository
 @Repository
 class CandidateRepositoryORM : CandidateRepository {
     val candidates = mutableMapOf<CandidateId, Candidate>()
-    override fun getById(candidateId: CandidateId): Candidate {
-        return candidates[candidateId] ?: throw CandidateNotFound()
-    }
+    override fun getById(candidateId: CandidateId): Candidate =
+        candidates[candidateId] ?: throw CandidateNotFound()
+
 
     override fun save(candidate: Candidate) {
         candidates[candidate.candidateId] = candidate
+    }
+
+    override fun idempotentRemove(candidateId: CandidateId) {
+        candidates.remove(candidateId)
     }
 }

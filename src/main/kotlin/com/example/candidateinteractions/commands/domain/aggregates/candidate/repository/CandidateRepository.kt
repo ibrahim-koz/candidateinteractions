@@ -9,4 +9,5 @@ class CandidateNotFound : Exception()
 interface CandidateRepository {
     fun getById(candidateId: CandidateId): Candidate
     fun save(candidate: Candidate)
+    fun idempotentRemove(candidateId: CandidateId)
 }
