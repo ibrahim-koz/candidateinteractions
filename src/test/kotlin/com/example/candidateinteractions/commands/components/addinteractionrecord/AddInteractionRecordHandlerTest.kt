@@ -30,7 +30,6 @@ class AddInteractionRecordHandlerTest {
             scalarPhoneNumberOfInterviewer = "+905054536131"
         )
 
-
         // Assert
         verify { candidateRepository.getById("candidateId".toCandidateId()) }
         verify {
