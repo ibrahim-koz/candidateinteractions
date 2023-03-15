@@ -7,7 +7,7 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.va
 import org.springframework.stereotype.Repository
 
 @Repository
-class CandidateRepositoryORM : CandidateRepository {
+class FakeCandidateRepository : CandidateRepository {
     val candidates = mutableMapOf<CandidateId, Candidate>()
     override fun getById(candidateId: CandidateId): Candidate =
         candidates[candidateId] ?: throw CandidateNotFound()
@@ -21,7 +21,5 @@ class CandidateRepositoryORM : CandidateRepository {
         candidates.remove(candidateId)
     }
 
-    override fun persistChangesOf(candidate: Candidate) {
-        TODO("Not yet implemented")
-    }
+    override fun persistChangesOf(candidate: Candidate) {}
 }
