@@ -13,11 +13,15 @@ class CandidateRepositoryORM : CandidateRepository {
         candidates[candidateId] ?: throw CandidateNotFound()
 
 
-    override fun save(candidate: Candidate) {
+    override fun addNewCandidate(candidate: Candidate) {
         candidates[candidate.candidateId] = candidate
     }
 
     override fun idempotentRemove(candidateId: CandidateId) {
         candidates.remove(candidateId)
+    }
+
+    override fun persistChangesOf(candidate: Candidate) {
+        TODO("Not yet implemented")
     }
 }

@@ -39,7 +39,7 @@ class AddInteractionRecordHandlerTest {
                 phoneNumberOfInterviewer = "+905054536131".toPhoneNumber(),
             )
         }
-        verify { candidateRepository.save(candidate) }
+        verify { candidateRepository.addNewCandidate(candidate) }
     }
 
     @Test

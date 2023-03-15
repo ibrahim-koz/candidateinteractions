@@ -36,7 +36,7 @@ class Candidate(
         )
     }
 
-    fun deleteInteractionRecord(interactionRecordId: InteractionRecordId) {}
+    fun idempotentRemoveInteractionRecord(interactionRecordId: InteractionRecordId) {}
 
     fun updateInteractionRecord() {}
 }

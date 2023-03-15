@@ -39,7 +39,7 @@ class CreateCandidateHandler(
             candidateStatus = scalarCandidateStatus.toCandidateStatus()
         )
 
-        candidateRepository.save(candidate)
+        candidateRepository.addNewCandidate(candidate)
         return id
     }
 }

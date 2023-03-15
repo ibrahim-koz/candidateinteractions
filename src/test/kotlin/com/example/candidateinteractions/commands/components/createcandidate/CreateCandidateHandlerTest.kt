@@ -33,6 +33,6 @@ class CreateCandidateHandlerTest {
         )
 
         // Assert
-        verify { candidateRepository.save(any()) }
+        verify { candidateRepository.addNewCandidate(any()) }
     }
 }

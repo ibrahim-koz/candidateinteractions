@@ -27,7 +27,7 @@ class AddInteractionRecordHandler(
             emailOfInterviewer = scalarEmailOfInterviewer?.toEmail()
         )
 
-        candidateRepository.save(candidate)
+        candidateRepository.addNewCandidate(candidate)
         return id
     }
 }
