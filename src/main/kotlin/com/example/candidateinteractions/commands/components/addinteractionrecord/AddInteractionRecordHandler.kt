@@ -4,8 +4,9 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.Ca
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
 import com.example.candidateinteractions.commands.domain.utils.IdGenerator
+import org.springframework.stereotype.Service
 
-
+@Service
 class AddInteractionRecordHandler(
     private val candidateRepository: CandidateRepository,
     private val idGenerator: IdGenerator
@@ -15,7 +16,7 @@ class AddInteractionRecordHandler(
         scalarInteractionMethod: String,
         scalarPhoneNumberOfInterviewer: String? = null,
         scalarEmailOfInterviewer: String? = null
-    ) {
+    ): String {
         val candidate: Candidate = candidateRepository.getById(scalarCandidateId.toCandidateId())
         val id = idGenerator.generateId()
 
@@ -27,5 +28,6 @@ class AddInteractionRecordHandler(
         )
 
         candidateRepository.save(candidate)
+        return id
     }
 }

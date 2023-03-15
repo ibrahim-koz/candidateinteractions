@@ -1,15 +1,19 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.Candidate
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.CandidateId
+import org.springframework.stereotype.Repository
 
-class CandidateRepositoryORM: CandidateRepository {
-    override fun getById(toCandidateId: CandidateId): Candidate {
-        TODO("Not yet implemented")
+@Repository
+class CandidateRepositoryORM : CandidateRepository {
+    val candidates = mutableMapOf<CandidateId, Candidate>()
+    override fun getById(candidateId: CandidateId): Candidate {
+        return candidates[candidateId] ?: throw CandidateNotFound()
     }
 
     override fun save(candidate: Candidate) {
-        TODO("Not yet implemented")
+        candidates[candidate.candidateId] = candidate
     }
 }
