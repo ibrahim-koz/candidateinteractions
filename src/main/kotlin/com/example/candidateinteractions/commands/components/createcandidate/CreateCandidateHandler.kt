@@ -7,14 +7,14 @@ import com.example.candidateinteractions.commands.domain.utils.IdGenerator
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.stereotype.Service
 
-data class ContactInformationDTO(
+data class CreateContactInformationDTO(
     @JsonProperty("email")
     val scalarEmail: String,
     @JsonProperty("phoneNumber")
     val scalarPhoneNumber: String
 )
 
-fun ContactInformationDTO.toContactInformation() = ContactInformation(
+fun CreateContactInformationDTO.toContactInformation() = ContactInformation(
     email = this.scalarEmail.toEmail(),
     phoneNumber = this.scalarPhoneNumber.toPhoneNumber()
 )
@@ -27,7 +27,7 @@ class CreateCandidateHandler(
     fun handle(
         scalarName: String,
         scalarSurname: String,
-        contactInformationDTO: ContactInformationDTO,
+        createContactInformationDTO: CreateContactInformationDTO,
         scalarCandidateStatus: String
     ): String {
         val id = idGenerator.generateId()
@@ -35,7 +35,7 @@ class CreateCandidateHandler(
             candidateId = id.toCandidateId(),
             name = scalarName.toName(),
             surname = scalarSurname.toSurname(),
-            contactInformation = contactInformationDTO.toContactInformation(),
+            contactInformation = createContactInformationDTO.toContactInformation(),
             candidateStatus = scalarCandidateStatus.toCandidateStatus()
         )
 

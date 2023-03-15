@@ -25,7 +25,7 @@ class CreateCandidateHandlerTest {
         createCandidateHandler.handle(
             scalarName = "ibrahim",
             scalarSurname = "koz",
-            contactInformationDTO = ContactInformationDTO(
+            createContactInformationDTO = CreateContactInformationDTO(
                 scalarEmail = "ibrahimkoz@outlook.com",
                 scalarPhoneNumber = "+905054536131",
             ),

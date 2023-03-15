@@ -10,7 +10,7 @@ import java.net.URI
 data class CreateCandidateRequest(
     val name: String,
     val surname: String,
-    val contactInformation: ContactInformationDTO,
+    val contactInformation: CreateContactInformationDTO,
     val candidateStatus: String
 )
 
@@ -28,7 +28,7 @@ class CreateCandidateController(private val createCandidateHandler: CreateCandid
         val interactionRecordId = createCandidateHandler.handle(
             scalarName = request.name,
             scalarSurname = request.surname,
-            contactInformationDTO = request.contactInformation,
+            createContactInformationDTO = request.contactInformation,
             scalarCandidateStatus = request.candidateStatus
         )
 
