@@ -2,11 +2,7 @@ package com.example.candidateinteractions.commands.components.updatecandidate;
 
 import com.example.candidateinteractions.queries.CandidateRepresentation
 import com.example.candidateinteractions.queries.QueryService
-import com.fasterxml.jackson.annotation.JsonProperty
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*
 
 data class UpdateContactInformationRequestDTO(
     val email: String,
@@ -26,7 +22,7 @@ class UpdateCandidateController(
     private val updateCandidateHandler: UpdateCandidateHandler,
     private val queryService: QueryService
 ) {
-    @PatchMapping("candidate/{id}")
+    @PutMapping("candidate/{id}")
     fun handle(
         @PathVariable id: String,
         @RequestBody request: UpdateCandidateRequest

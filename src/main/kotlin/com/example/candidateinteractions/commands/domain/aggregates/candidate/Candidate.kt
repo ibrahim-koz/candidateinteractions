@@ -19,6 +19,8 @@ class Candidate(
 
     fun changeContactInformation(contactInformation: ContactInformation) {}
 
+    fun changeStatus(status: CandidateStatus) {}
+
     fun addInteractionRecord(
         interactionRecordId: InteractionRecordId,
         interactionMethod: InteractionMethod,
