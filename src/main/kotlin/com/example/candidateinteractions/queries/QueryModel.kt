@@ -99,8 +99,8 @@ class QueryModel {
         )
     }
 
-    @GetMapping("candidate/{id}/interaction")
-    fun getCandidateInteractions(
+    @GetMapping("candidate/{id}/interaction-record")
+    fun getCandidateInteractionRecords(
         @PathVariable id: String
     ): List<InteractionRecordRepresentation> {
         return listOf(
@@ -122,7 +122,7 @@ class QueryModel {
         )
     }
 
-    @GetMapping("interaction/{id}")
+    @GetMapping("interaction-record/{id}")
     fun getInteractionRecord(
         @PathVariable id: String
     ): InteractionRecordRepresentation {
@@ -133,7 +133,7 @@ class QueryModel {
         )
     }
 
-    @GetMapping("interaction")
+    @GetMapping("interaction-record")
     fun getInteractionRecords(
     ): List<InteractionRecordRepresentation> {
         return listOf(
