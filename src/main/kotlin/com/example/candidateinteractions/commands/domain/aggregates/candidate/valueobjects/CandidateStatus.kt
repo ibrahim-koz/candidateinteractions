@@ -1,3 +1,5 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects
 
-class CandidateStatus
+data class CandidateStatus(val value: String)
+
+fun String.toCandidateStatus() = CandidateStatus(this)

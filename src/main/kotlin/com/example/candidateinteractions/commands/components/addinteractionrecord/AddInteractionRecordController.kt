@@ -9,7 +9,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
 
 data class AddInteractionRecordRequest(
-    val candidateId: String,
     val interactionMethod: String,
     val phoneNumberOfInterviewer: String? = null,
     val emailOfInterviewer: String? = null
@@ -24,11 +23,11 @@ data class AddInteractionRecordResponse(
 class AddInteractionRecordController(private val addInteractionRecordHandler: AddInteractionRecordHandler) {
     @PostMapping("candidate/{id}/interaction-record")
     fun handle(
-        @PathVariable id: Int,
+        @PathVariable id: String,
         @RequestBody request: AddInteractionRecordRequest
     ): AddInteractionRecordResponse {
         val interactionRecordId = addInteractionRecordHandler.handle(
-            scalarCandidateId = request.candidateId,
+            scalarCandidateId = id,
             scalarInteractionMethod = request.interactionMethod,
             scalarPhoneNumberOfInterviewer = request.phoneNumberOfInterviewer,
             scalarEmailOfInterviewer = request.emailOfInterviewer
