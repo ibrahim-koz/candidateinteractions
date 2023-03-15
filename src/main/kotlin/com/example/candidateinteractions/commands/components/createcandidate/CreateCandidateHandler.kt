@@ -35,14 +35,15 @@ class CreateCandidateHandler(
         createCandidateParams: CreateCandidateParams
     ): String {
         val id = idGenerator.generateId()
-        val candidate = Candidate(
-            candidateId = id.toCandidateId(),
-            name = createCandidateParams.scalarName.toName(),
-            surname = createCandidateParams.scalarSurname.toSurname(),
-            contactInformation = createCandidateParams.createContactInformationDTO.toContactInformation(),
-            candidateStatus = createCandidateParams.scalarCandidateStatus.toCandidateStatus()
-        )
-
+        val candidate = createCandidateParams.run {
+            Candidate(
+                candidateId = id.toCandidateId(),
+                name = scalarName.toName(),
+                surname = scalarSurname.toSurname(),
+                contactInformation = createContactInformationDTO.toContactInformation(),
+                status = scalarCandidateStatus.toCandidateStatus()
+            )
+        }
         candidateRepository.addNewCandidate(candidate)
         return id
     }

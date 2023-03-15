@@ -25,12 +25,14 @@ class AddInteractionRecordHandler(
             candidateRepository.getById(addInteractionRecordParams.scalarCandidateId.toCandidateId())
         val id = idGenerator.generateId()
 
-        candidate.addInteractionRecord(
-            interactionRecordId = id.toInteractionRecordId(),
-            interactionMethod = addInteractionRecordParams.scalarInteractionMethod.toInteractionMethod(),
-            phoneNumberOfInterviewer = addInteractionRecordParams.scalarPhoneNumberOfInterviewer?.toPhoneNumber(),
-            emailOfInterviewer = addInteractionRecordParams.scalarEmailOfInterviewer?.toEmail()
-        )
+        addInteractionRecordParams.run {
+            candidate.addInteractionRecord(
+                interactionRecordId = id.toInteractionRecordId(),
+                interactionMethod = scalarInteractionMethod.toInteractionMethod(),
+                phoneNumberOfInterviewer = scalarPhoneNumberOfInterviewer?.toPhoneNumber(),
+                emailOfInterviewer = scalarEmailOfInterviewer?.toEmail()
+            )
+        }
 
         candidateRepository.addNewCandidate(candidate)
         return id

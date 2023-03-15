@@ -1,5 +1,14 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects
 
-data class InteractionMethod(val value: String)
+sealed class InteractionMethod {
+    object PhoneInteraction : InteractionMethod()
+    object EmailInteraction : InteractionMethod()
+}
 
-fun String.toInteractionMethod() = InteractionMethod(this)
+
+fun String.toInteractionMethod() =
+    when (this) {
+        "PhoneInteraction" -> InteractionMethod.PhoneInteraction
+        "EmailInteraction" -> InteractionMethod.EmailInteraction
+        else -> throw IllegalArgumentException()
+    }

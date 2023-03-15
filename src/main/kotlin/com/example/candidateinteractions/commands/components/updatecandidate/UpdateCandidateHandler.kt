@@ -17,30 +17,26 @@ fun UpdateContactInformationDTO.toContactInformation() =
 
 data class UpdateCandidateParams(
     val scalarCandidateId: String,
-    val scalarName: String?,
-    val scalarSurname: String?,
-    val scalarContactInformation: UpdateContactInformationDTO?,
-    val scalarCandidateStatus: String?
+    val scalarName: String,
+    val scalarSurname: String,
+    val scalarContactInformation: UpdateContactInformationDTO,
+    val scalarCandidateStatus: String
 )
 
 @Service
 class UpdateCandidateHandler(private val candidateRepository: CandidateRepository) {
     fun handle(updateCandidateParams: UpdateCandidateParams) {
         val candidate = candidateRepository.getById(updateCandidateParams.scalarCandidateId.toCandidateId())
-        updateCandidateParams.scalarName?.let {
-            candidate.changeName(it.toName())
+
+        updateCandidateParams.let {
+            candidate.apply {
+                changeName(it.scalarName.toName())
+                changeSurname(it.scalarSurname.toSurname())
+                changeContactInformation(it.scalarContactInformation.toContactInformation())
+                changeStatus(it.scalarCandidateStatus.toCandidateStatus())
+            }
         }
 
-        updateCandidateParams.scalarSurname?.let {
-            candidate.changeSurname(it.toSurname())
-        }
-
-        updateCandidateParams.scalarContactInformation?.let {
-            candidate.changeContactInformation(it.toContactInformation())
-        }
-
-        updateCandidateParams.scalarCandidateStatus?.let {
-            candidate.changeStatus(it.toCandidateStatus())
-        }
+        candidateRepository.persistChangesOf(candidate)
     }
 }

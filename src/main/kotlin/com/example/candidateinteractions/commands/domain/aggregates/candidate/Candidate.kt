@@ -3,23 +3,34 @@ package com.example.candidateinteractions.commands.domain.aggregates.candidate
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.entities.AbstractEntity
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.entities.InteractionRecord
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
+import com.example.candidateinteractions.commands.domain.utils.requireNotNullOrThrow
+
+class InteractionRecordNotFound : Exception()
 
 class Candidate(
-    val candidateId: CandidateId,
-    var name: Name,
-    var surname: Surname,
-    var contactInformation: ContactInformation,
-    var candidateStatus: CandidateStatus
+    private val candidateId: CandidateId,
+    private var name: Name,
+    private var surname: Surname,
+    private var contactInformation: ContactInformation,
+    private var status: CandidateStatus
 ) : AbstractEntity<CandidateId>(candidateId) {
-    private val previousInteractionRecords = mutableListOf<InteractionRecord>()
+    private val previousInteractionRecords = mutableMapOf<InteractionRecordId, InteractionRecord>()
 
-    fun changeName(name: Name) {}
+    fun changeName(name: Name) {
+        this.name = name
+    }
 
-    fun changeSurname(surname: Surname) {}
+    fun changeSurname(surname: Surname) {
+        this.surname = surname
+    }
 
-    fun changeContactInformation(contactInformation: ContactInformation) {}
+    fun changeContactInformation(contactInformation: ContactInformation) {
+        this.contactInformation = contactInformation
+    }
 
-    fun changeStatus(status: CandidateStatus) {}
+    fun changeStatus(status: CandidateStatus) {
+        this.status = status
+    }
 
     fun addInteractionRecord(
         interactionRecordId: InteractionRecordId,
@@ -27,7 +38,7 @@ class Candidate(
         phoneNumberOfInterviewer: PhoneNumber? = null,
         emailOfInterviewer: Email? = null
     ) {
-        previousInteractionRecords.add(
+        previousInteractionRecords[interactionRecordId] =
             InteractionRecord(
                 interactionRecordId = interactionRecordId,
                 candidateId = this.candidateId,
@@ -35,11 +46,28 @@ class Candidate(
                 phoneNumberOfInterviewer = phoneNumberOfInterviewer,
                 emailOfInterviewer = emailOfInterviewer
             )
-        )
     }
 
-    fun idempotentRemoveInteractionRecord(interactionRecordId: InteractionRecordId) {}
+    fun idempotentRemoveInteractionRecord(interactionRecordId: InteractionRecordId) {
+        val interactionRecord = previousInteractionRecords[interactionRecordId]
+        requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound() }
+        previousInteractionRecords.remove(interactionRecordId)
+    }
 
-    fun updateInteractionRecord() {}
+    fun updateInteractionRecord(
+        interactionRecordId: InteractionRecordId,
+        interactionMethod: InteractionMethod,
+        phoneNumberOfInterviewer: PhoneNumber? = null,
+        emailOfInterviewer: Email? = null
+    ) {
+        val interactionRecord = previousInteractionRecords[interactionRecordId]
+        requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound() }
+
+        interactionRecord.updateInteractionMethod(
+            interactionMethod = interactionMethod,
+            phoneNumberOfInterviewer = phoneNumberOfInterviewer,
+            emailOfInterviewer = emailOfInterviewer
+        )
+    }
 }
 

@@ -10,10 +10,10 @@ data class UpdateContactInformationRequestDTO(
 )
 
 data class UpdateCandidateRequest(
-    val name: String?,
-    val surname: String?,
+    val name: String,
+    val surname: String,
     val contactInformation: UpdateContactInformationRequestDTO,
-    val candidateStatus: String?
+    val candidateStatus: String
 )
 
 

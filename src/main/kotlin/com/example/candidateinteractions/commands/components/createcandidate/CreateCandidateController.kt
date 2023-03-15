@@ -1,5 +1,7 @@
 package com.example.candidateinteractions.commands.components.createcandidate
 
+import com.example.candidateinteractions.queries.CandidateRepresentation
+import com.example.candidateinteractions.queries.QueryService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,12 +22,15 @@ data class CreateCandidateResponse(
 )
 
 @RestController
-class CreateCandidateController(private val createCandidateHandler: CreateCandidateHandler) {
+class CreateCandidateController(
+    private val createCandidateHandler: CreateCandidateHandler,
+    private val queryService: QueryService
+) {
     @PostMapping("candidate")
     fun handle(
         @RequestBody request: CreateCandidateRequest
-    ): CreateCandidateResponse {
-        val interactionRecordId = createCandidateHandler.handle(
+    ): CandidateRepresentation {
+        val candidateId = createCandidateHandler.handle(
             CreateCandidateParams(
                 scalarName = request.name,
                 scalarSurname = request.surname,
@@ -34,11 +39,6 @@ class CreateCandidateController(private val createCandidateHandler: CreateCandid
             )
         )
 
-        val location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(interactionRecordId)
-            .toUri()
-
-        return CreateCandidateResponse(location)
+        return queryService.getCandidate(candidateId)
     }
 }
