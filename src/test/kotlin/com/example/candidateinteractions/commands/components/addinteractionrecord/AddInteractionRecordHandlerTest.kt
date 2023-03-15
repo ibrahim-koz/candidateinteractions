@@ -23,9 +23,9 @@ class AddInteractionRecordHandlerTest {
 
         // Act
         addInteractionRecordHandler.handle(
-            candidateId = "candidateId",
-            interactionMethod = "PhoneInteraction",
-            phoneNumberOfInterviewer = "+905054536131"
+            scalarCandidateId = "candidateId",
+            scalarInteractionMethod = "PhoneInteraction",
+            scalarPhoneNumberOfInterviewer = "+905054536131"
         )
 
 

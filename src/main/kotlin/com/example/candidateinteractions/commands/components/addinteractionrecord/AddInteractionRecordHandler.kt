@@ -11,19 +11,19 @@ class AddInteractionRecordHandler(
     private val idGenerator: IdGenerator
 ) {
     fun handle(
-        candidateId: String,
-        interactionMethod: String,
-        phoneNumberOfInterviewer: String? = null,
-        emailOfInterviewer: String? = null
+        scalarCandidateId: String,
+        scalarInteractionMethod: String,
+        scalarPhoneNumberOfInterviewer: String? = null,
+        scalarEmailOfInterviewer: String? = null
     ) {
-        val candidate: Candidate = candidateRepository.getById(candidateId.toCandidateId())
-        val id = idGenerator.generateId().toInteractionRecordId()
+        val candidate: Candidate = candidateRepository.getById(scalarCandidateId.toCandidateId())
+        val id = idGenerator.generateId()
 
         candidate.addInteractionRecord(
-            interactionRecordId = id,
-            interactionMethod = interactionMethod.toInteractionMethod(),
-            phoneNumberOfInterviewer = phoneNumberOfInterviewer?.toPhoneNumber(),
-            emailOfInterviewer = emailOfInterviewer?.toEmail()
+            interactionRecordId = id.toInteractionRecordId(),
+            interactionMethod = scalarInteractionMethod.toInteractionMethod(),
+            phoneNumberOfInterviewer = scalarPhoneNumberOfInterviewer?.toPhoneNumber(),
+            emailOfInterviewer = scalarEmailOfInterviewer?.toEmail()
         )
 
         candidateRepository.save(candidate)
