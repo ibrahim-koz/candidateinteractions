@@ -14,8 +14,10 @@ class DeleteInteractionRecordController(private val deleteInteractionRecordHandl
         @PathVariable interactionRecordId: String
     ): ResponseEntity<Void> {
         deleteInteractionRecordHandler.handle(
-            scalarCandidateId = candidateId,
-            scalarInteractionRecordId = interactionRecordId
+            DeleteInteractionRecordParams(
+                scalarCandidateId = candidateId,
+                scalarInteractionRecordId = interactionRecordId
+            )
         )
         return ResponseEntity.status(HttpStatus.OK).build()
     }

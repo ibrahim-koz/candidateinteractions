@@ -19,24 +19,28 @@ fun CreateContactInformationDTO.toContactInformation() = ContactInformation(
     phoneNumber = this.scalarPhoneNumber.toPhoneNumber()
 )
 
+data class CreateCandidateParams(
+    val scalarName: String,
+    val scalarSurname: String,
+    val createContactInformationDTO: CreateContactInformationDTO,
+    val scalarCandidateStatus: String
+)
+
 @Service
 class CreateCandidateHandler(
     private val candidateRepository: CandidateRepository,
     private val idGenerator: IdGenerator
 ) {
     fun handle(
-        scalarName: String,
-        scalarSurname: String,
-        createContactInformationDTO: CreateContactInformationDTO,
-        scalarCandidateStatus: String
+        createCandidateParams: CreateCandidateParams
     ): String {
         val id = idGenerator.generateId()
         val candidate = Candidate(
             candidateId = id.toCandidateId(),
-            name = scalarName.toName(),
-            surname = scalarSurname.toSurname(),
-            contactInformation = createContactInformationDTO.toContactInformation(),
-            candidateStatus = scalarCandidateStatus.toCandidateStatus()
+            name = createCandidateParams.scalarName.toName(),
+            surname = createCandidateParams.scalarSurname.toSurname(),
+            contactInformation = createCandidateParams.createContactInformationDTO.toContactInformation(),
+            candidateStatus = createCandidateParams.scalarCandidateStatus.toCandidateStatus()
         )
 
         candidateRepository.addNewCandidate(candidate)

@@ -27,10 +27,12 @@ class AddInteractionRecordController(private val addInteractionRecordHandler: Ad
         @RequestBody request: AddInteractionRecordRequest
     ): AddInteractionRecordResponse {
         val interactionRecordId = addInteractionRecordHandler.handle(
-            scalarCandidateId = id,
-            scalarInteractionMethod = request.interactionMethod,
-            scalarPhoneNumberOfInterviewer = request.phoneNumberOfInterviewer,
-            scalarEmailOfInterviewer = request.emailOfInterviewer
+            AddInteractionRecordParams(
+                scalarCandidateId = id,
+                scalarInteractionMethod = request.interactionMethod,
+                scalarPhoneNumberOfInterviewer = request.phoneNumberOfInterviewer,
+                scalarEmailOfInterviewer = request.emailOfInterviewer
+            )
         )
 
         val location = ServletUriComponentsBuilder.fromCurrentRequest()

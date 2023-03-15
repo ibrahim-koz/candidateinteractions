@@ -12,7 +12,9 @@ class DeleteCandidateController(private val deleteCandidateHandler: DeleteCandid
     fun handle(
         @PathVariable id: String
     ): ResponseEntity<Void> {
-        deleteCandidateHandler.handle(id)
+        deleteCandidateHandler.handle(
+            DeleteCandidateParams(scalarCandidateId = id)
+        )
         return ResponseEntity.status(HttpStatus.OK).build()
     }
 }

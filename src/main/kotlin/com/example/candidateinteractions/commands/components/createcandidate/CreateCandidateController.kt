@@ -26,10 +26,12 @@ class CreateCandidateController(private val createCandidateHandler: CreateCandid
         @RequestBody request: CreateCandidateRequest
     ): CreateCandidateResponse {
         val interactionRecordId = createCandidateHandler.handle(
-            scalarName = request.name,
-            scalarSurname = request.surname,
-            createContactInformationDTO = request.contactInformation,
-            scalarCandidateStatus = request.candidateStatus
+            CreateCandidateParams(
+                scalarName = request.name,
+                scalarSurname = request.surname,
+                createContactInformationDTO = request.contactInformation,
+                scalarCandidateStatus = request.candidateStatus
+            )
         )
 
         val location = ServletUriComponentsBuilder.fromCurrentRequest()
