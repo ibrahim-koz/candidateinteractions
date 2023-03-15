@@ -34,6 +34,5 @@ class CreateCandidateHandlerTest {
 
         // Assert
         verify { candidateRepository.save(any()) }
-
     }
 }
