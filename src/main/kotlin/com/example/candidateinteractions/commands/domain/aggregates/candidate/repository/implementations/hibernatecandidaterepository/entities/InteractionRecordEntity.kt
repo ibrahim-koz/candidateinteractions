@@ -3,6 +3,7 @@ package com.example.candidateinteractions.commands.domain.aggregates.candidate.r
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.entities.InteractionRecord
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.valueobjects.*
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
+import com.example.candidateinteractions.queries.InteractionRecordRepresentation
 import javax.persistence.*
 
 @Entity
@@ -51,6 +52,17 @@ class InteractionRecordEntity(
             )
         }
     }
+
+    fun toInteractionRecordRepresentation(): InteractionRecordRepresentation {
+        return InteractionRecordRepresentation(
+            scalarInteractionRecordId = interactionRecordId.value,
+            scalarCandidateId = candidateId.value,
+            scalarInteractionMethod = interactionMethod.toString(),
+            scalarPhoneNumberOfInterviewer = phoneNumberOfInterviewer?.value,
+            scalarMailOfInterviewer = emailOfInterviewer?.value
+        )
+    }
+
 }
 
 

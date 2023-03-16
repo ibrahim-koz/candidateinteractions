@@ -3,6 +3,8 @@ package com.example.candidateinteractions.commands.domain.aggregates.candidate.r
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.Candidate
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.valueobjects.*
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
+import com.example.candidateinteractions.queries.CandidateRepresentation
+import com.example.candidateinteractions.queries.ContactInformationRepresentation
 import javax.persistence.*
 
 
@@ -121,5 +123,18 @@ class CandidateEntity(
                 status = candidate.status
             )
         }
+    }
+
+    fun toCandidateRepresentation(): CandidateRepresentation {
+        return CandidateRepresentation(
+            scalarCandidateId = candidateId.value,
+            scalarName = name.value,
+            scalarSurname = surname.value,
+            contactInformationRepresentation = ContactInformationRepresentation(
+                scalarEmail = contactInformation.email?.value ?: "",
+                scalarPhoneNumber = contactInformation.phoneNumber?.value ?: ""
+            ),
+            scalarCandidateStatus = status.value
+        )
     }
 }

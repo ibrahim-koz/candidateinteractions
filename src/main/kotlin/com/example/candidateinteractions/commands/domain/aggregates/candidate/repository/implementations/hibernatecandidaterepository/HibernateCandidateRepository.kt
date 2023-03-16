@@ -5,57 +5,38 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.re
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.CandidateEntity
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.CandidateId
-import org.hibernate.SessionFactory
+import jakarta.persistence.EntityManager
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Primary
+import org.springframework.stereotype.Repository
 
-class HibernateCandidateRepository(private val sessionFactory: SessionFactory) : CandidateRepository {
+@Primary
+@Repository
+class HibernateCandidateRepository @Autowired constructor(private val entityManager: EntityManager) :
+    CandidateRepository {
     override fun getById(candidateId: CandidateId): Candidate {
-        val session = sessionFactory.openSession()
-        val transaction = session.beginTransaction()
+        val candidateEntity = entityManager.find(CandidateEntity::class.java, candidateId)
+            ?: throw CandidateNotFound()
 
-        val candidateEntity = session.find(CandidateEntity::class.java, candidateId) ?: throw CandidateNotFound()
-
-        val candidate = candidateEntity.toDomain()
-
-        transaction.commit()
-        session.close()
-
-        return candidate
+        return candidateEntity.toDomain()
     }
 
     override fun addNewCandidate(candidate: Candidate) {
-        val session = sessionFactory.openSession()
-        val transaction = session.beginTransaction()
-
         val candidateEntity = CandidateEntity.fromDomain(candidate)
-        session.save(candidateEntity)
-
-        transaction.commit()
-        session.close()
+        entityManager.persist(candidateEntity)
     }
 
     override fun idempotentRemove(candidateId: CandidateId) {
-        val session = sessionFactory.openSession()
-        val transaction = session.beginTransaction()
-
-        val candidateEntity = session.find(CandidateEntity::class.java, candidateId)
-        candidateEntity?.let { session.delete(it) }
-
-        transaction.commit()
-        session.close()
+        val candidateEntity = entityManager.find(CandidateEntity::class.java, candidateId)
+        candidateEntity?.let { entityManager.remove(it) }
     }
 
     override fun persistChangesOf(candidate: Candidate) {
-        val session = sessionFactory.openSession()
-        val transaction = session.beginTransaction()
-
-        val candidateEntity = session.find(CandidateEntity::class.java, candidate.candidateId)
+        val candidateEntity = entityManager.find(CandidateEntity::class.java, candidate.candidateId)
             ?: throw CandidateNotFound()
 
         candidateEntity.updateFromDomain(candidate)
 
-        session.update(candidateEntity)
-
-        transaction.commit()
-        session.close()
+        entityManager.merge(candidateEntity)
     }
 }

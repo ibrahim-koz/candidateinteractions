@@ -12,3 +12,11 @@ fun String.toInteractionMethod() =
         "EmailInteraction" -> InteractionMethod.EmailInteraction
         else -> throw IllegalArgumentException()
     }
+
+
+fun InteractionMethod.toScalarValue(): String {
+    return when (this) {
+        is InteractionMethod.PhoneInteraction -> "PhoneInteraction"
+        is InteractionMethod.EmailInteraction -> "EmailInteraction"
+    }
+}

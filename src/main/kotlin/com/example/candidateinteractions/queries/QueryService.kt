@@ -1,8 +1,17 @@
 package com.example.candidateinteractions.queries
 
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.InteractionRecordNotFound
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.CandidateEntity
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.InteractionRecordEntity
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.CandidateId
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toInteractionRecordId
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toScalarValue
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import jakarta.persistence.EntityManager
 
 
 data class InteractionRecordRepresentation(
@@ -45,101 +54,49 @@ data class CandidateRepresentation(
 )
 
 @Service
-class QueryService {
-    fun getCandidate(scalarId: String) =
-        CandidateRepresentation(
-            scalarName = "ibrahim",
-            scalarSurname = "koz",
-            contactInformationRepresentation = ContactInformationRepresentation(
-                scalarEmail = "ibrahimkoz@outlook.com",
-                scalarPhoneNumber = "+905054536131"
-            ),
-            scalarCandidateStatus = "sourced"
+class QueryService @Autowired constructor(private val entityManager: EntityManager) {
+    fun getCandidate(scalarId: String): CandidateRepresentation {
+        val candidateEntity =
+            entityManager.find(CandidateEntity::class.java, CandidateId(scalarId)) ?: throw CandidateNotFound()
+
+        return candidateEntity.toCandidateRepresentation()
+    }
+
+    fun getCandidates(): List<CandidateRepresentation> {
+        val candidateEntities =
+            entityManager.createQuery("FROM CandidateEntity", CandidateEntity::class.java).resultList
+
+        return candidateEntities.map { it.toCandidateRepresentation() }
+    }
+
+    fun getCandidateInteractionRecords(candidateId: String): List<InteractionRecordRepresentation> {
+        val candidateEntity =
+            entityManager.find(CandidateEntity::class.java, CandidateId(candidateId)) ?: throw CandidateNotFound()
+
+        return candidateEntity.previousInteractionRecords.map { it.toInteractionRecordRepresentation() }
+    }
+
+    fun getInteractionRecords(): List<InteractionRecordRepresentation> {
+        val interactionRecordEntities =
+            entityManager.createQuery("FROM InteractionRecordEntity", InteractionRecordEntity::class.java).resultList
+
+        return interactionRecordEntities.map { it.toInteractionRecordRepresentation() }
+    }
+
+    fun getInteractionRecord(scalarId: String): InteractionRecordRepresentation {
+        val interactionRecordEntity =
+            entityManager.find(InteractionRecordEntity::class.java, scalarId.toInteractionRecordId())
+                ?: throw InteractionRecordNotFound()
+
+        val interactionRecord = interactionRecordEntity.toDomain()
+
+        return InteractionRecordRepresentation(
+            scalarInteractionRecordId = interactionRecord.interactionRecordId.value,
+            scalarCandidateId = interactionRecord.candidateId.value,
+            scalarInteractionMethod = interactionRecord.interactionMethod.toScalarValue(),
+            scalarPhoneNumberOfInterviewer = interactionRecord.phoneNumberOfInterviewer?.value,
+            scalarMailOfInterviewer = interactionRecord.emailOfInterviewer?.value
         )
-
-
-    fun getCandidates() = listOf(
-        CandidateRepresentation(
-            scalarCandidateId = "candidateId",
-            scalarName = "ibrahim",
-            scalarSurname = "koz",
-            contactInformationRepresentation = ContactInformationRepresentation(
-                scalarEmail = "ibrahimkoz@outlook.com",
-                scalarPhoneNumber = "+905054536131"
-            ),
-            scalarCandidateStatus = "sourced"
-        ),
-        CandidateRepresentation(
-            scalarCandidateId = "candidateId2",
-            scalarName = "ibrahim",
-            scalarSurname = "koz",
-            contactInformationRepresentation = ContactInformationRepresentation(
-                scalarEmail = "ibrahimkoz@outlook.com",
-                scalarPhoneNumber = "+905054536131"
-            ),
-            scalarCandidateStatus = "sourced"
-        ),
-        CandidateRepresentation(
-            scalarCandidateId = "candidateId3",
-            scalarName = "ibrahim",
-            scalarSurname = "koz",
-            contactInformationRepresentation = ContactInformationRepresentation(
-                scalarEmail = "ibrahimkoz@outlook.com",
-                scalarPhoneNumber = "+905054536131"
-            ),
-            scalarCandidateStatus = "sourced"
-        )
-    )
-
-
-    fun getCandidateInteractionRecords(
-        scalarId: String
-    ) = listOf(
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "1",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
-        ),
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "2",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
-        ),
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "3",
-            scalarInteractionMethod = "EmailInteraction",
-            scalarMailOfInterviewer = "ibrahimkoz@outlook.com"
-        )
-    )
-
-
-    fun getInteractionRecord(
-        scalarId: String
-    ): InteractionRecordRepresentation =
-        InteractionRecordRepresentation(
-            scalarCandidateId = "candidateId",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
-        )
-
-    fun getInteractionRecords() = listOf(
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "1",
-            scalarCandidateId = "candidateId",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
-        ),
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "2",
-            scalarCandidateId = "candidateId",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
-        ),
-        InteractionRecordRepresentation(
-            scalarInteractionRecordId = "3",
-            scalarCandidateId = "candidateId",
-            scalarInteractionMethod = "EmailInteraction",
-            scalarMailOfInterviewer = "ibrahimkoz@outlook.com"
-        )
-    )
+    }
 }
+

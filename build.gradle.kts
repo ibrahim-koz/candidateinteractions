@@ -32,8 +32,8 @@ dependencies {
     // HikariCP (Connection Pooling)
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    // JDBC driver for your chosen database (e.g., MySQL, PostgreSQL, etc.)
-    implementation("mysql:mysql-connector-java:8.0.28") // Update to the latest version if needed and change this to the appropriate driver for your database
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
