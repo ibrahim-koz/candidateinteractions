@@ -1,6 +1,7 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.Candidate
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.CandidateId
 import org.springframework.context.annotation.Primary
@@ -14,7 +15,7 @@ class CandidateRepositoryAdapter(
 
     override fun getById(candidateId: CandidateId): Candidate {
         val candidateEntity = candidateEntityRepository.findById(candidateId.value).orElse(null)
-        return candidateEntity?.toDomain() ?: throw IllegalArgumentException("Candidate not found")
+        return candidateEntity?.toDomain() ?: throw CandidateNotFound()
     }
 
     override fun addNewCandidate(candidate: Candidate) {
