@@ -1,4 +1,4 @@
-package com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations
+package com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.fakeimplementation
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.Candidate
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound

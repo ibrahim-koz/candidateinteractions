@@ -64,7 +64,7 @@ class Candidate(
         val interactionRecord = previousInteractionRecords[interactionRecordId]
         requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound() }
 
-        interactionRecord.updateInteractionMethod(
+        interactionRecord.update(
             interactionMethod = interactionMethod,
             phoneNumberOfInterviewer = phoneNumberOfInterviewer,
             emailOfInterviewer = emailOfInterviewer

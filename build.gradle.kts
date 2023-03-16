@@ -16,24 +16,15 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    runtimeOnly("com.h2database:h2")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.13.4")
-
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    // Hibernate and JPA
-    implementation("org.hibernate:hibernate-core:6.1.7.Final") // Update to the latest Hibernate version if needed
-    implementation("javax.persistence:javax.persistence-api:2.2")
-
-    // HikariCP (Connection Pooling)
-    implementation("com.zaxxer:HikariCP:5.0.1")
-
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

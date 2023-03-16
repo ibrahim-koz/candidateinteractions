@@ -2,16 +2,14 @@ package com.example.candidateinteractions.queries
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.InteractionRecordNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
-import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.CandidateEntity
-import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.InteractionRecordEntity
-import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.CandidateId
-import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toInteractionRecordId
-import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toScalarValue
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.CandidateEntity
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.CandidateEntityRepository
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.InteractionRecordEntity
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import jakarta.persistence.EntityManager
+import org.springframework.data.jpa.repository.JpaRepository
 
 
 data class InteractionRecordRepresentation(
@@ -53,50 +51,73 @@ data class CandidateRepresentation(
     val scalarCandidateStatus: String
 )
 
+interface InteractionRecordEntityRepository : JpaRepository<InteractionRecordEntity, String>
+
+fun CandidateEntity.toCandidateRepresentation(): CandidateRepresentation {
+    return CandidateRepresentation(
+        scalarCandidateId = this.candidateId,
+        scalarName = this.name,
+        scalarSurname = this.surname,
+        contactInformationRepresentation = ContactInformationRepresentation(
+            scalarEmail = this.contactInformation.email,
+            scalarPhoneNumber = this.contactInformation.phoneNumber
+        ),
+        scalarCandidateStatus = this.status.name
+    )
+}
+
+fun InteractionRecordEntity.toInteractionRecordRepresentation(): InteractionRecordRepresentation {
+    return InteractionRecordRepresentation(
+        scalarInteractionRecordId = this.interactionRecordId,
+        scalarCandidateId = this.candidateId,
+        scalarInteractionMethod = this.interactionMethod.name,
+        scalarPhoneNumberOfInterviewer = this.phoneNumberOfInterviewer,
+        scalarMailOfInterviewer = this.emailOfInterviewer
+    )
+}
+
+
 @Service
-class QueryService @Autowired constructor(private val entityManager: EntityManager) {
+class QueryService @Autowired constructor(
+    private val candidateEntityRepository: CandidateEntityRepository,
+    private val interactionRecordEntityRepository: InteractionRecordEntityRepository
+) {
     fun getCandidate(scalarId: String): CandidateRepresentation {
-        val candidateEntity =
-            entityManager.find(CandidateEntity::class.java, CandidateId(scalarId)) ?: throw CandidateNotFound()
+        val candidateEntity = candidateEntityRepository.findById(scalarId).orElseThrow { CandidateNotFound() }
 
         return candidateEntity.toCandidateRepresentation()
     }
 
     fun getCandidates(): List<CandidateRepresentation> {
-        val candidateEntities =
-            entityManager.createQuery("FROM CandidateEntity", CandidateEntity::class.java).resultList
+        val candidateEntities = candidateEntityRepository.findAll()
 
         return candidateEntities.map { it.toCandidateRepresentation() }
     }
 
     fun getCandidateInteractionRecords(candidateId: String): List<InteractionRecordRepresentation> {
-        val candidateEntity =
-            entityManager.find(CandidateEntity::class.java, CandidateId(candidateId)) ?: throw CandidateNotFound()
+        val candidateEntity = candidateEntityRepository.findById(candidateId).orElseThrow { CandidateNotFound() }
 
         return candidateEntity.previousInteractionRecords.map { it.toInteractionRecordRepresentation() }
     }
 
     fun getInteractionRecords(): List<InteractionRecordRepresentation> {
-        val interactionRecordEntities =
-            entityManager.createQuery("FROM InteractionRecordEntity", InteractionRecordEntity::class.java).resultList
+        val interactionRecordEntities = interactionRecordEntityRepository.findAll()
 
         return interactionRecordEntities.map { it.toInteractionRecordRepresentation() }
     }
 
     fun getInteractionRecord(scalarId: String): InteractionRecordRepresentation {
-        val interactionRecordEntity =
-            entityManager.find(InteractionRecordEntity::class.java, scalarId.toInteractionRecordId())
-                ?: throw InteractionRecordNotFound()
+        val interactionRecordEntity = interactionRecordEntityRepository.findById(scalarId)
+            .orElseThrow { InteractionRecordNotFound() }
 
         val interactionRecord = interactionRecordEntity.toDomain()
 
         return InteractionRecordRepresentation(
             scalarInteractionRecordId = interactionRecord.interactionRecordId.value,
             scalarCandidateId = interactionRecord.candidateId.value,
-            scalarInteractionMethod = interactionRecord.interactionMethod.toScalarValue(),
+            scalarInteractionMethod = interactionRecord.interactionMethod.value,
             scalarPhoneNumberOfInterviewer = interactionRecord.phoneNumberOfInterviewer?.value,
             scalarMailOfInterviewer = interactionRecord.emailOfInterviewer?.value
         )
     }
 }
-

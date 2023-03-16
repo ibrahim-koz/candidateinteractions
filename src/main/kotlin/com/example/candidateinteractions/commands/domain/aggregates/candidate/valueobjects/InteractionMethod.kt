@@ -1,22 +1,17 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects
 
-sealed class InteractionMethod {
-    object PhoneInteraction : InteractionMethod()
-    object EmailInteraction : InteractionMethod()
+enum class InteractionMethod(val value: String) {
+    PHONE_INTERACTION("PhoneInteraction"),
+    EMAIL_INTERACTION("EmailInteraction");
+
+    companion object {
+        private val valueMap = values().associateBy(InteractionMethod::value)
+
+        fun fromValue(value: String): InteractionMethod =
+            valueMap[value] ?: throw IllegalArgumentException("Invalid interaction method value: $value")
+    }
 }
 
-
-fun String.toInteractionMethod() =
-    when (this) {
-        "PhoneInteraction" -> InteractionMethod.PhoneInteraction
-        "EmailInteraction" -> InteractionMethod.EmailInteraction
-        else -> throw IllegalArgumentException()
-    }
-
-
-fun InteractionMethod.toScalarValue(): String {
-    return when (this) {
-        is InteractionMethod.PhoneInteraction -> "PhoneInteraction"
-        is InteractionMethod.EmailInteraction -> "EmailInteraction"
-    }
+fun String.toInteractionMethod(): InteractionMethod {
+    return InteractionMethod.fromValue(this)
 }

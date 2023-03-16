@@ -5,14 +5,14 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.va
 import org.springframework.stereotype.Service
 
 data class UpdateContactInformationDTO(
-    val scalarEmail: String?,
-    val scalarPhoneNumber: String?
+    val scalarEmail: String,
+    val scalarPhoneNumber: String
 )
 
 fun UpdateContactInformationDTO.toContactInformation() =
     ContactInformation(
-        email = this.scalarEmail?.toEmail(),
-        phoneNumber = this.scalarEmail?.toPhoneNumber()
+        email = this.scalarEmail.toEmail(),
+        phoneNumber = this.scalarEmail.toPhoneNumber()
     )
 
 data class UpdateCandidateParams(

@@ -1,7 +1,6 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.entities
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
-import com.example.candidateinteractions.commands.domain.utils.requireNull
 
 class InteractionRecord(
     val interactionRecordId: InteractionRecordId,
@@ -10,28 +9,37 @@ class InteractionRecord(
     var phoneNumberOfInterviewer: PhoneNumber?,
     var emailOfInterviewer: Email?
 ) : AbstractEntity<InteractionRecordId>(interactionRecordId) {
-    fun updateInteractionMethod(
-        interactionMethod: InteractionMethod,
+    fun update(
+        interactionMethod: InteractionMethod? = null,
         phoneNumberOfInterviewer: PhoneNumber? = null,
         emailOfInterviewer: Email? = null,
     ) {
-        when (interactionMethod) {
-            is InteractionMethod.PhoneInteraction -> {
-                requireNotNull(phoneNumberOfInterviewer)
-                requireNull(emailOfInterviewer)
-                this.interactionMethod = interactionMethod
+        if (interactionMethod != null) {
+            when (interactionMethod) {
+                InteractionMethod.PHONE_INTERACTION -> {
+                    requireNotNull(phoneNumberOfInterviewer)
+                    require(emailOfInterviewer == null)
+                    this.interactionMethod = interactionMethod
+                    this.phoneNumberOfInterviewer = phoneNumberOfInterviewer
+                    this.emailOfInterviewer = null
+                }
+
+                InteractionMethod.EMAIL_INTERACTION -> {
+                    requireNotNull(emailOfInterviewer)
+                    require(phoneNumberOfInterviewer == null)
+                    this.interactionMethod = interactionMethod
+                    this.phoneNumberOfInterviewer = null
+                    this.emailOfInterviewer = emailOfInterviewer
+                }
+            }
+        } else {
+            if (phoneNumberOfInterviewer != null && this.interactionMethod == InteractionMethod.PHONE_INTERACTION) {
                 this.phoneNumberOfInterviewer = phoneNumberOfInterviewer
-                this.emailOfInterviewer = null
             }
 
-            is InteractionMethod.EmailInteraction -> {
-                requireNotNull(emailOfInterviewer)
-                requireNull(phoneNumberOfInterviewer)
-                this.interactionMethod = interactionMethod
-                this.phoneNumberOfInterviewer = null
+            if (emailOfInterviewer != null && this.interactionMethod == InteractionMethod.EMAIL_INTERACTION) {
                 this.emailOfInterviewer = emailOfInterviewer
             }
         }
     }
 }
-
