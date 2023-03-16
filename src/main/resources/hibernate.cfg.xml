@@ -12,8 +12,9 @@
         <property name="show_sql">true</property>
 
         <!-- List your annotated entity classes here -->
-        <mapping class="com.example.candidateinteractions.commands.domain.aggregates.candidate.Candidate"/>
         <mapping
-                class="com.example.candidateinteractions.commands.domain.aggregates.candidate.InteractionRecordNotFound"/>
+                class="com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.CandidateEntity"/>
+        <mapping
+                class="com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernatecandidaterepository.entities.InteractionRecordEntity"/>
     </session-factory>
 </hibernate-configuration>
