@@ -23,13 +23,15 @@ class CreateCandidateHandlerTest {
 
         // Act
         createCandidateHandler.handle(
-            scalarName = "ibrahim",
-            scalarSurname = "koz",
-            createContactInformationDTO = CreateContactInformationDTO(
-                scalarEmail = "ibrahimkoz@outlook.com",
-                scalarPhoneNumber = "+905054536131",
-            ),
-            scalarCandidateStatus = "sourced"
+            CreateCandidateParams(
+                scalarName = "ibrahim",
+                scalarSurname = "koz",
+                createContactInformationDTO = CreateContactInformationDTO(
+                    scalarEmail = "ibrahimkoz@outlook.com",
+                    scalarPhoneNumber = "+905054536131",
+                ),
+                scalarCandidateStatus = "sourced"
+            )
         )
 
         // Assert

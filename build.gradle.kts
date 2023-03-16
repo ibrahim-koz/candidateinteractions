@@ -21,6 +21,19 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.13.4")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Hibernate and JPA
+    implementation("org.hibernate:hibernate-core:6.1.7.Final") // Update to the latest Hibernate version if needed
+    implementation("javax.persistence:javax.persistence-api:2.2")
+
+    // HikariCP (Connection Pooling)
+    implementation("com.zaxxer:HikariCP:5.0.1")
+
+    // JDBC driver for your chosen database (e.g., MySQL, PostgreSQL, etc.)
+    implementation("mysql:mysql-connector-java:8.0.28") // Update to the latest version if needed and change this to the appropriate driver for your database
 }
 
 tasks.withType<KotlinCompile> {

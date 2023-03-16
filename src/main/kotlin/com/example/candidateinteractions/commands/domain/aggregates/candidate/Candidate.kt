@@ -8,13 +8,14 @@ import com.example.candidateinteractions.commands.domain.utils.requireNotNullOrT
 class InteractionRecordNotFound : Exception()
 
 class Candidate(
-    private val candidateId: CandidateId,
-    private var name: Name,
-    private var surname: Surname,
-    private var contactInformation: ContactInformation,
-    private var status: CandidateStatus
+    val candidateId: CandidateId,
+    var name: Name,
+    var surname: Surname,
+    var contactInformation: ContactInformation,
+    var status: CandidateStatus
 ) : AbstractEntity<CandidateId>(candidateId) {
-    private val previousInteractionRecords = mutableMapOf<InteractionRecordId, InteractionRecord>()
+    val previousInteractionRecords = mutableMapOf<InteractionRecordId, InteractionRecord>()
+
 
     fun changeName(name: Name) {
         this.name = name

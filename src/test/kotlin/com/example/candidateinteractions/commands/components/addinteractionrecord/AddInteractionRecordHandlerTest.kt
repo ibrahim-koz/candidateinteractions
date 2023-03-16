@@ -25,9 +25,11 @@ class AddInteractionRecordHandlerTest {
 
         // Act
         addInteractionRecordHandler.handle(
-            scalarCandidateId = "candidateId",
-            scalarInteractionMethod = "PhoneInteraction",
-            scalarPhoneNumberOfInterviewer = "+905054536131"
+            AddInteractionRecordParams(
+                scalarCandidateId = "candidateId",
+                scalarInteractionMethod = "PhoneInteraction",
+                scalarPhoneNumberOfInterviewer = "+905054536131"
+            )
         )
 
         // Assert
@@ -55,9 +57,11 @@ class AddInteractionRecordHandlerTest {
         // Act && Assert
         assertThrows<CandidateNotFound> {
             addInteractionRecordHandler.handle(
-                scalarCandidateId = "candidateId",
-                scalarInteractionMethod = "PhoneInteraction",
-                scalarPhoneNumberOfInterviewer = "+905054536131"
+                AddInteractionRecordParams(
+                    scalarCandidateId = "candidateId",
+                    scalarInteractionMethod = "PhoneInteraction",
+                    scalarPhoneNumberOfInterviewer = "+905054536131"
+                )
             )
         }
     }

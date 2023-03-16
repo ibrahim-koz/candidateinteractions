@@ -14,7 +14,9 @@ class FakeCandidateRepository : CandidateRepository {
 
 
     override fun addNewCandidate(candidate: Candidate) {
-        candidates[candidate.candidateId] = candidate
+        if (!candidates.containsKey(candidate.candidateId)) {
+            candidates[candidate.candidateId] = candidate
+        }
     }
 
     override fun idempotentRemove(candidateId: CandidateId) {

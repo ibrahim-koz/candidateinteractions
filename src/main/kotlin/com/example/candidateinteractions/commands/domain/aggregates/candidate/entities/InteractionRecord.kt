@@ -4,11 +4,11 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.va
 import com.example.candidateinteractions.commands.domain.utils.requireNull
 
 class InteractionRecord(
-    private val interactionRecordId: InteractionRecordId,
-    private val candidateId: CandidateId,
-    private var interactionMethod: InteractionMethod,
-    private var phoneNumberOfInterviewer: PhoneNumber?,
-    private var emailOfInterviewer: Email?
+    val interactionRecordId: InteractionRecordId,
+    val candidateId: CandidateId,
+    var interactionMethod: InteractionMethod,
+    var phoneNumberOfInterviewer: PhoneNumber?,
+    var emailOfInterviewer: Email?
 ) : AbstractEntity<InteractionRecordId>(interactionRecordId) {
     fun updateInteractionMethod(
         interactionMethod: InteractionMethod,
