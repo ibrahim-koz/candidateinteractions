@@ -12,6 +12,7 @@ This API is designed to manage candidates and their interaction records.
 -   [Add Interaction Record](#add-interaction-record)
 -   [Delete Interaction Record](#delete-interaction-record)
 -   [Update Interaction Record](#update-interaction-record)
+-   [Appendix: Architecture Patterns in the Candidate Interactions Project](#appendix--architecture-patterns-in-the-candidate-interactions-project)
 
 ## Create Candidate
 
@@ -257,3 +258,34 @@ To run this project, follow these steps:
     docker run -p 8080:8080 candidateinteractions
     ```
 3. The API should now be available at `http://localhost:8080`. You can use a tool like [Postman](https://www.postman.com/) or [curl](https://curl.se/) to send requests to the API.
+
+## Appendix: Architecture Patterns in the Candidate Interactions Project
+
+This project incorporates several software architecture patterns, including Command Query Responsibility Segregation (CQRS), Domain-Driven Design (DDD), Hexagonal Architecture (Ports and Adapters), and a touch of London-style Test-Driven Development (TDD) to explore interfaces using a top-down approach. The project is also designed to be completely persistence layer ignorant, allowing for greater flexibility and adaptability.
+
+### 1. CQRS
+
+-   Separates read (query) and write (command) operations
+-   Enhances scalability and maintainability
+-   Facilitates eventual consistency and event sourcing
+
+### 2. DDD
+
+-   Focuses on modeling the problem domain
+-   Centralizes domain knowledge in code
+-   Improves communication between developers and domain experts
+
+### 3. Hexagonal Architecture
+
+-   Decouples core logic from external dependencies
+-   Increases maintainability and testability
+-   Allows for easier adaptation to changing dependencies
+-   Enables persistence layer ignorance
+
+### 4. London-style TDD
+
+-   Explores interfaces using a top-down approach
+-   Guides design of system components
+-   Ensures consistent and well-defined interactions between components
+
+By combining these patterns and emphasizing persistence layer ignorance, the Candidate Interactions Project achieves a robust, maintainable, and scalable system, providing a solid foundation for future development and growth. The design allows for seamless integration with various persistence layers, increasing adaptability to different storage technologies as requirements evolve.
