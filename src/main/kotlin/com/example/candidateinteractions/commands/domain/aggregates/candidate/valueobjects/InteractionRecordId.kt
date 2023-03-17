@@ -18,6 +18,10 @@ data class InteractionRecordId(val value: String) {
         val interactionRecordIdPattern = "^[a-zA-Z0-9-]+$".toRegex()
         return interactionRecordIdPattern.matches(interactionRecordId)
     }
+
+    override fun toString(): String {
+        return value
+    }
 }
 
 

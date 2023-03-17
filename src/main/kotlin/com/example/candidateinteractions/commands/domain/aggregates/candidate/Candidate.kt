@@ -5,7 +5,7 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.en
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
 import com.example.candidateinteractions.commands.domain.utils.requireNotNullOrThrow
 
-class InteractionRecordNotFound : Exception()
+class InteractionRecordNotFound(val value: InteractionRecordId) : Exception()
 
 class Candidate(
     val candidateId: CandidateId,
@@ -60,7 +60,7 @@ class Candidate(
         emailOfInterviewer: Email? = null
     ) {
         val interactionRecord = previousInteractionRecords[interactionRecordId]
-        requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound() }
+        requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound(interactionRecordId) }
 
         interactionRecord.update(
             interactionMethod = interactionMethod,

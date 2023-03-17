@@ -1,5 +1,6 @@
 package com.example.candidateinteractions.commands.components.updateinteractionrecord
 
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.InteractionRecordNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
 import com.example.candidateinteractions.queries.InteractionRecordRepresentation
@@ -50,6 +51,11 @@ class UpdateInteractionRecordController(
             is CandidateNotFound -> {
                 statusCode = HttpStatus.NOT_FOUND
                 errorMessage = "Candidate not found: ${ex.value}"
+            }
+
+            is InteractionRecordNotFound -> {
+                statusCode = HttpStatus.NOT_FOUND
+                errorMessage = "Interaction record not found: ${ex.value}"
             }
 
             is InvalidEmailException -> {

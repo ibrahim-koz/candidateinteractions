@@ -6,6 +6,7 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.re
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.CandidateEntityRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.InteractionRecordEntity
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toCandidateId
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toInteractionRecordId
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
@@ -116,7 +117,7 @@ class QueryService @Autowired constructor(
 
     fun getInteractionRecord(scalarId: String): InteractionRecordRepresentation {
         val interactionRecordEntity = interactionRecordEntityRepository.findById(scalarId)
-            .orElseThrow { InteractionRecordNotFound() }
+            .orElseThrow { InteractionRecordNotFound(scalarId.toInteractionRecordId()) }
 
         val interactionRecord = interactionRecordEntity.toDomain()
 
