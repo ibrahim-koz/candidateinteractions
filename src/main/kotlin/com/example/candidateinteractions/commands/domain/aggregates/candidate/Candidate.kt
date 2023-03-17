@@ -50,8 +50,6 @@ class Candidate(
     }
 
     fun idempotentRemoveInteractionRecord(interactionRecordId: InteractionRecordId) {
-        val interactionRecord = previousInteractionRecords[interactionRecordId]
-        requireNotNullOrThrow(interactionRecord) { InteractionRecordNotFound() }
         previousInteractionRecords.remove(interactionRecordId)
     }
 

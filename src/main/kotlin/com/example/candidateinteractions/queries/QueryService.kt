@@ -5,74 +5,75 @@ import com.example.candidateinteractions.commands.domain.aggregates.candidate.re
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.CandidateEntity
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.CandidateEntityRepository
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.implementations.hibernateimplementation.InteractionRecordEntity
+import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.toCandidateId
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Service
 
 
 data class InteractionRecordRepresentation(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("interactionRecordId")
-    val scalarInteractionRecordId: String? = null,
+    val interactionRecordId: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("candidateId")
-    val scalarCandidateId: String? = null,
+    val candidateId: String? = null,
     @JsonProperty("interactionMethod")
-    val scalarInteractionMethod: String,
+    val interactionMethod: String,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("phoneNumberOfInterviewer")
-    val scalarPhoneNumberOfInterviewer: String? = null,
+    val phoneNumberOfInterviewer: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("emailOfInterviewer")
-    var scalarMailOfInterviewer: String? = null
+    var emailOfInterviewer: String? = null
 )
 
 
 data class ContactInformationRepresentation(
     @JsonProperty("email")
-    val scalarEmail: String,
+    val email: String,
     @JsonProperty("phoneNumber")
-    val scalarPhoneNumber: String
+    val phoneNumber: String
 )
 
 data class CandidateRepresentation(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("candidateId")
-    val scalarCandidateId: String? = null,
+    val candidateId: String? = null,
     @JsonProperty("name")
-    val scalarName: String,
+    val name: String,
     @JsonProperty("surname")
-    val scalarSurname: String,
+    val surname: String,
     @JsonProperty("contactInformation")
     val contactInformationRepresentation: ContactInformationRepresentation,
     @JsonProperty("candidateStatus")
-    val scalarCandidateStatus: String
+    val candidateStatus: String
 )
 
 interface InteractionRecordEntityRepository : JpaRepository<InteractionRecordEntity, String>
 
 fun CandidateEntity.toCandidateRepresentation(): CandidateRepresentation {
     return CandidateRepresentation(
-        scalarCandidateId = this.candidateId,
-        scalarName = this.name,
-        scalarSurname = this.surname,
+        candidateId = this.candidateId,
+        name = this.name,
+        surname = this.surname,
         contactInformationRepresentation = ContactInformationRepresentation(
-            scalarEmail = this.contactInformation.email,
-            scalarPhoneNumber = this.contactInformation.phoneNumber
+            email = this.contactInformation.email,
+            phoneNumber = this.contactInformation.phoneNumber
         ),
-        scalarCandidateStatus = this.status.name
+        candidateStatus = this.status.name
     )
 }
 
 fun InteractionRecordEntity.toInteractionRecordRepresentation(): InteractionRecordRepresentation {
     return InteractionRecordRepresentation(
-        scalarInteractionRecordId = this.interactionRecordId,
-        scalarCandidateId = this.candidateId,
-        scalarInteractionMethod = this.interactionMethod.name,
-        scalarPhoneNumberOfInterviewer = this.phoneNumberOfInterviewer,
-        scalarMailOfInterviewer = this.emailOfInterviewer
+        interactionRecordId = this.interactionRecordId,
+        candidateId = this.candidateId,
+        interactionMethod = this.interactionMethod.name,
+        phoneNumberOfInterviewer = this.phoneNumberOfInterviewer,
+        emailOfInterviewer = this.emailOfInterviewer
     )
 }
 
@@ -83,7 +84,8 @@ class QueryService @Autowired constructor(
     private val interactionRecordEntityRepository: InteractionRecordEntityRepository
 ) {
     fun getCandidate(scalarId: String): CandidateRepresentation {
-        val candidateEntity = candidateEntityRepository.findById(scalarId).orElseThrow { CandidateNotFound() }
+        val candidateEntity =
+            candidateEntityRepository.findById(scalarId).orElseThrow { CandidateNotFound(scalarId.toCandidateId()) }
 
         return candidateEntity.toCandidateRepresentation()
     }
@@ -95,7 +97,8 @@ class QueryService @Autowired constructor(
     }
 
     fun getCandidateInteractionRecords(candidateId: String): List<InteractionRecordRepresentation> {
-        val candidateEntity = candidateEntityRepository.findById(candidateId).orElseThrow { CandidateNotFound() }
+        val candidateEntity = candidateEntityRepository.findById(candidateId)
+            .orElseThrow { CandidateNotFound(candidateId.toCandidateId()) }
 
         return candidateEntity.previousInteractionRecords.map { it.toInteractionRecordRepresentation() }
     }
@@ -113,11 +116,11 @@ class QueryService @Autowired constructor(
         val interactionRecord = interactionRecordEntity.toDomain()
 
         return InteractionRecordRepresentation(
-            scalarInteractionRecordId = interactionRecord.interactionRecordId.value,
-            scalarCandidateId = interactionRecord.candidateId.value,
-            scalarInteractionMethod = interactionRecord.interactionMethod.value,
-            scalarPhoneNumberOfInterviewer = interactionRecord.phoneNumberOfInterviewer?.value,
-            scalarMailOfInterviewer = interactionRecord.emailOfInterviewer?.value
+            interactionRecordId = interactionRecord.interactionRecordId.value,
+            candidateId = interactionRecord.candidateId.value,
+            interactionMethod = interactionRecord.interactionMethod.value,
+            phoneNumberOfInterviewer = interactionRecord.phoneNumberOfInterviewer?.value,
+            emailOfInterviewer = interactionRecord.emailOfInterviewer?.value
         )
     }
 }

@@ -81,6 +81,11 @@ class AddInteractionRecordController(
                 errorMessage = "Invalid interaction record ID format: ${ex.value}"
             }
 
+            is InvalidInteractionMethodException -> {
+                statusCode = HttpStatus.BAD_REQUEST
+                errorMessage = "Invalid interaction method format: ${ex.value}"
+            }
+
             is IllegalArgumentException -> {
                 statusCode = HttpStatus.BAD_REQUEST
                 errorMessage = ex.message ?: "Invalid input"
