@@ -1,5 +1,7 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects
 
+class InvalidCandidateStatusException : IllegalArgumentException()
+
 enum class CandidateStatus(val value: String) {
     SOURCED("sourced"),
     INTERVIEWING("interviewing"),
@@ -10,7 +12,7 @@ enum class CandidateStatus(val value: String) {
         private val valueMap = values().associateBy(CandidateStatus::value)
 
         fun fromValue(value: String): CandidateStatus =
-            valueMap[value] ?: throw IllegalArgumentException("Invalid candidate status value: $value")
+            valueMap[value] ?: throw InvalidCandidateStatusException()
     }
 }
 
