@@ -2,7 +2,7 @@ package com.example.candidateinteractions.commands.components.updatecandidate
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
-import com.example.candidateinteractions.queries.CandidateRepresentation
+import com.example.candidateinteractions.queries.SingleCandidateRepresentation
 import com.example.candidateinteractions.queries.QueryService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,7 +31,7 @@ class UpdateCandidateController(
     fun handle(
         @PathVariable id: String,
         @RequestBody request: UpdateCandidateRequest
-    ): CandidateRepresentation {
+    ): SingleCandidateRepresentation {
         updateCandidateHandler.handle(
             UpdateCandidateParams(
                 scalarCandidateId = id,

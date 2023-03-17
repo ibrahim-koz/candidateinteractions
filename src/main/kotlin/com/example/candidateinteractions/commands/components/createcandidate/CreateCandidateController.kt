@@ -2,7 +2,7 @@ package com.example.candidateinteractions.commands.components.createcandidate
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.repository.CandidateNotFound
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.*
-import com.example.candidateinteractions.queries.CandidateRepresentation
+import com.example.candidateinteractions.queries.SingleCandidateRepresentation
 import com.example.candidateinteractions.queries.QueryService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,7 +25,7 @@ class CreateCandidateController(
     @PostMapping("candidate")
     fun handle(
         @RequestBody request: CreateCandidateRequest
-    ): ResponseEntity<CandidateRepresentation> {
+    ): ResponseEntity<SingleCandidateRepresentation> {
         val candidateId = createCandidateHandler.handle(
             CreateCandidateParams(
                 scalarName = request.name,

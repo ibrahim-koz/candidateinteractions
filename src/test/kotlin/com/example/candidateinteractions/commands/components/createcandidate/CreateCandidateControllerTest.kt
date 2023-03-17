@@ -3,9 +3,9 @@ import com.example.candidateinteractions.commands.components.createcandidate.Cre
 import com.example.candidateinteractions.commands.components.createcandidate.CreateCandidateRequest
 import com.example.candidateinteractions.commands.components.createcandidate.CreateContactInformationDTO
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.InvalidEmailException
-import com.example.candidateinteractions.queries.CandidateRepresentation
 import com.example.candidateinteractions.queries.ContactInformationRepresentation
 import com.example.candidateinteractions.queries.QueryService
+import com.example.candidateinteractions.queries.SingleCandidateRepresentation
 import io.mockk.every
 import io.mockk.mockk
 import jakarta.servlet.http.HttpServletRequest
@@ -41,7 +41,7 @@ class CreateCandidateControllerTest {
         )
 
         val candidateId = "1"
-        val candidateRepresentation = CandidateRepresentation(
+        val singleCandidateRepresentation = SingleCandidateRepresentation(
             candidateId = candidateId,
             name = request.name,
             surname = request.surname,
@@ -49,7 +49,8 @@ class CreateCandidateControllerTest {
                 email = request.contactInformation.scalarEmail,
                 phoneNumber = request.contactInformation.scalarPhoneNumber
             ),
-            candidateStatus = request.candidateStatus
+            candidateStatus = request.candidateStatus,
+            interactionRecords = listOf()
         )
 
         every {
@@ -58,12 +59,12 @@ class CreateCandidateControllerTest {
 
         every {
             queryService.getCandidate(candidateId)
-        } returns candidateRepresentation
+        } returns singleCandidateRepresentation
 
         val result = controller.handle(request)
 
         assertEquals(HttpStatus.CREATED, result.statusCode)
-        assertEquals(candidateRepresentation, result.body)
+        assertEquals(singleCandidateRepresentation, result.body)
     }
 
     @Test

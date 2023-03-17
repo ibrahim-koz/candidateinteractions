@@ -39,7 +39,7 @@ data class ContactInformationRepresentation(
     val phoneNumber: String
 )
 
-data class CandidateRepresentation(
+data class SingleCandidateRepresentation(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("candidateId")
     val candidateId: String? = null,
@@ -55,11 +55,40 @@ data class CandidateRepresentation(
     val interactionRecords: List<InteractionRecordRepresentation>
 )
 
+data class CandidateListRepresentation(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("candidateId")
+    val candidateId: String? = null,
+    @JsonProperty("name")
+    val name: String,
+    @JsonProperty("surname")
+    val surname: String,
+    @JsonProperty("contactInformation")
+    val contactInformationRepresentation: ContactInformationRepresentation,
+    @JsonProperty("candidateStatus")
+    val candidateStatus: String
+)
+
+
+fun CandidateEntity.toCandidateListRepresentation(): CandidateListRepresentation {
+    return CandidateListRepresentation(
+        candidateId = this.candidateId,
+        name = this.name,
+        surname = this.surname,
+        contactInformationRepresentation = ContactInformationRepresentation(
+            email = this.contactInformation.email,
+            phoneNumber = this.contactInformation.phoneNumber
+        ),
+        candidateStatus = this.status.name
+    )
+}
+
+
 interface InteractionRecordEntityRepository : JpaRepository<InteractionRecordEntity, String>
 
-fun CandidateEntity.toCandidateRepresentation(): CandidateRepresentation {
+fun CandidateEntity.singleCandidateRepresentation(): SingleCandidateRepresentation {
     val interactionRecords = this.previousInteractionRecords.map { it.toInteractionRecordRepresentation() }
-    return CandidateRepresentation(
+    return SingleCandidateRepresentation(
         candidateId = this.candidateId,
         name = this.name,
         surname = this.surname,
@@ -89,17 +118,17 @@ class QueryService @Autowired constructor(
     private val candidateEntityRepository: CandidateEntityRepository,
     private val interactionRecordEntityRepository: InteractionRecordEntityRepository
 ) {
-    fun getCandidate(scalarId: String): CandidateRepresentation {
+    fun getCandidate(scalarId: String): SingleCandidateRepresentation {
         val candidateEntity =
             candidateEntityRepository.findById(scalarId).orElseThrow { CandidateNotFound(scalarId.toCandidateId()) }
 
-        return candidateEntity.toCandidateRepresentation()
+        return candidateEntity.singleCandidateRepresentation()
     }
 
-    fun getCandidates(): List<CandidateRepresentation> {
+    fun getCandidates(): List<CandidateListRepresentation> {
         val candidateEntities = candidateEntityRepository.findAll()
 
-        return candidateEntities.map { it.toCandidateRepresentation() }
+        return candidateEntities.map { it.toCandidateListRepresentation() }
     }
 
     fun getCandidateInteractionRecords(candidateId: String): List<InteractionRecordRepresentation> {

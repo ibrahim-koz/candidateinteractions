@@ -1,7 +1,7 @@
 package com.example.candidateinteractions.commands.components.updatecandidate
 
 import com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects.InvalidEmailException
-import com.example.candidateinteractions.queries.CandidateRepresentation
+import com.example.candidateinteractions.queries.SingleCandidateRepresentation
 import com.example.candidateinteractions.queries.ContactInformationRepresentation
 import com.example.candidateinteractions.queries.QueryService
 import io.mockk.every
@@ -39,7 +39,7 @@ class UpdateCandidateControllerTest {
             candidateStatus = "active"
         )
 
-        val candidateRepresentation = CandidateRepresentation(
+        val singleCandidateRepresentation = SingleCandidateRepresentation(
             candidateId = candidateId,
             name = request.name,
             surname = request.surname,
@@ -47,16 +47,17 @@ class UpdateCandidateControllerTest {
                 email = request.contactInformation.email,
                 phoneNumber = request.contactInformation.phoneNumber
             ),
-            candidateStatus = request.candidateStatus
+            candidateStatus = request.candidateStatus,
+            interactionRecords = listOf()
         )
 
         every {
             queryService.getCandidate(candidateId)
-        } returns candidateRepresentation
+        } returns singleCandidateRepresentation
 
         val result = controller.handle(candidateId, request)
 
-        assertEquals(candidateRepresentation, result)
+        assertEquals(singleCandidateRepresentation, result)
     }
 
     @Test
