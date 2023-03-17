@@ -39,7 +39,6 @@ class Candidate(
         phoneNumberOfInterviewer: PhoneNumber? = null,
         emailOfInterviewer: Email? = null
     ) {
-        // TODO: We're going to incorporate the validation checks into interaction record.
         previousInteractionRecords[interactionRecordId] =
             InteractionRecord(
                 interactionRecordId = interactionRecordId,
