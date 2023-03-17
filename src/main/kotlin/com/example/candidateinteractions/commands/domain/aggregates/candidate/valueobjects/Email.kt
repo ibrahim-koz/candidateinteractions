@@ -1,6 +1,6 @@
 package com.example.candidateinteractions.commands.domain.aggregates.candidate.valueobjects
 
-class InvalidEmailException(email: String) : IllegalArgumentException("Invalid email: $email")
+class InvalidEmailException(val value: String) : IllegalArgumentException()
 
 
 data class Email(val value: String) {
@@ -10,7 +10,7 @@ data class Email(val value: String) {
 
     private fun requireValidEmail(email: String) {
         if (!isValidEmail(email)) {
-            throw InvalidEmailException(email)
+            throw InvalidEmailException(value)
         }
     }
 

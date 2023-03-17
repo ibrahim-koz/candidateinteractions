@@ -15,7 +15,7 @@ class CandidateRepositoryAdapter(
 
     override fun getById(candidateId: CandidateId): Candidate {
         val candidateEntity = candidateEntityRepository.findById(candidateId.value).orElse(null)
-        return candidateEntity?.toDomain() ?: throw CandidateNotFound()
+        return candidateEntity?.toDomain() ?: throw CandidateNotFound(candidateId)
     }
 
     override fun addNewCandidate(candidate: Candidate) {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 class FakeCandidateRepository : CandidateRepository {
     val candidates = mutableMapOf<CandidateId, Candidate>()
     override fun getById(candidateId: CandidateId): Candidate =
-        candidates[candidateId] ?: throw CandidateNotFound()
+        candidates[candidateId] ?: throw CandidateNotFound(candidateId)
 
 
     override fun addNewCandidate(candidate: Candidate) {
