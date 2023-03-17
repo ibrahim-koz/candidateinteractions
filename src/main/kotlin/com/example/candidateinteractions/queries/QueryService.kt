@@ -49,12 +49,15 @@ data class CandidateRepresentation(
     @JsonProperty("contactInformation")
     val contactInformationRepresentation: ContactInformationRepresentation,
     @JsonProperty("candidateStatus")
-    val candidateStatus: String
+    val candidateStatus: String,
+    @JsonProperty("interactionRecords")
+    val interactionRecords: List<InteractionRecordRepresentation>
 )
 
 interface InteractionRecordEntityRepository : JpaRepository<InteractionRecordEntity, String>
 
 fun CandidateEntity.toCandidateRepresentation(): CandidateRepresentation {
+    val interactionRecords = this.previousInteractionRecords.map { it.toInteractionRecordRepresentation() }
     return CandidateRepresentation(
         candidateId = this.candidateId,
         name = this.name,
@@ -63,9 +66,11 @@ fun CandidateEntity.toCandidateRepresentation(): CandidateRepresentation {
             email = this.contactInformation.email,
             phoneNumber = this.contactInformation.phoneNumber
         ),
-        candidateStatus = this.status.name
+        candidateStatus = this.status.name,
+        interactionRecords = interactionRecords
     )
 }
+
 
 fun InteractionRecordEntity.toInteractionRecordRepresentation(): InteractionRecordRepresentation {
     return InteractionRecordRepresentation(
