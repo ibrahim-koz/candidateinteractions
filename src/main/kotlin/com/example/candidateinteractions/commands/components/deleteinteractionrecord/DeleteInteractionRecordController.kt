@@ -83,16 +83,7 @@ class DeleteInteractionRecordController(private val deleteInteractionRecordHandl
                 errorMessage = "An error occurred"
             }
         }
-        val errorDetails = if (errorMessage.isNotEmpty()) {
-            ErrorResponse(errorMessage, LocalDateTime.now())
-        } else {
-            null
-        }
-
-        return if (errorDetails != null) {
-            ResponseEntity(errorDetails, statusCode)
-        } else {
-            ResponseEntity(statusCode)
-        }
+        val errorDetails = ErrorResponse(errorMessage, LocalDateTime.now())
+        return ResponseEntity(errorDetails, statusCode)
     }
 }
