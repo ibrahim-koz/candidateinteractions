@@ -12,7 +12,7 @@ enum class CandidateStatus(val value: String) {
         private val valueMap = values().associateBy(CandidateStatus::value)
 
         fun fromValue(value: String): CandidateStatus =
-            valueMap[value] ?: throw InvalidCandidateStatusException(value)
+            valueMap[value.lowercase()] ?: throw InvalidCandidateStatusException(value)
     }
 }
 
