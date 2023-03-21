@@ -5,7 +5,7 @@ class InvalidCandidateStatusException(val value: String) : IllegalArgumentExcept
 enum class CandidateStatus(val value: String) {
     SOURCED("sourced"),
     INTERVIEWING("interviewing"),
-    OFFER_SENT("offer sent"),
+    OFFER_SENT("offerSent"),
     HIRED("hired");
 
     companion object {
@@ -13,6 +13,10 @@ enum class CandidateStatus(val value: String) {
 
         fun fromValue(value: String): CandidateStatus =
             valueMap[value.lowercase()] ?: throw InvalidCandidateStatusException(value)
+    }
+
+    override fun toString(): String {
+        return value
     }
 }
 
